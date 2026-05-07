@@ -9,6 +9,9 @@ public class Room
     private bool hasKey;
     private bool hasChest;
 
+    private bool hasExit;
+    private bool isStart;
+
     private bool hasNorth;
     private bool hasSouth;
     private bool hasEast;
@@ -22,13 +25,16 @@ public class Room
         SetLamp(false);
         SetKey(false);
         SetChest(false);
+
+        SetExit(false);
+        SetStart(false);
+
         SetNorth(false);
         SetSouth(false);
         SetEast(false);
         SetWest(false);
-        SetDescription(string.Empty);
 
-
+        description = string.Empty;
     }
 
     public bool IsLit()
@@ -51,6 +57,16 @@ public class Room
         return hasChest;
     }
 
+    public bool HasExit()
+    {
+        return hasExit;
+    }
+
+    public bool IsStart()
+    {
+        return isStart;
+    }
+
     public bool HasNorth()
     {
         return hasNorth;
@@ -61,12 +77,12 @@ public class Room
         return hasSouth;
     }
 
-     public bool HasEast()
+    public bool HasEast()
     {
         return hasEast;
     }
 
-     public bool HasWest()
+    public bool HasWest()
     {
         return hasWest;
     }
@@ -74,7 +90,7 @@ public class Room
     public string GetDescription()
     {
         return description;
-    }    
+    }
 
     public void SetLit(bool b)
     {
@@ -85,14 +101,25 @@ public class Room
     {
         hasLamp = b;
     }
-    
+
     public void SetKey(bool b)
     {
         hasKey = b;
     }
+
     public void SetChest(bool b)
     {
         hasChest = b;
+    }
+
+    public void SetExit(bool b)
+    {
+        hasExit = b;
+    }
+
+    public void SetStart(bool b)
+    {
+        isStart = b;
     }
 
     public void SetNorth(bool b)
@@ -100,19 +127,17 @@ public class Room
         hasNorth = b;
     }
 
-     public void SetSouth(bool b)
+    public void SetSouth(bool b)
     {
         hasSouth = b;
     }
 
-
- public void SetEast(bool b)
+    public void SetEast(bool b)
     {
         hasEast = b;
     }
 
-
- public void SetWest(bool b)
+    public void SetWest(bool b)
     {
         hasWest = b;
     }
@@ -122,9 +147,8 @@ public class Room
         description = d;
     }
 
-
     public override string ToString()
     {
-        return $"Room[isLit={isLit}, hasLamp={hasLamp}, hasKey={hasKey}, hasChest={hasChest}, hasNorth={hasNorth}, hasSouth={hasSouth}, hasEast={hasEast}, hasWest={hasWest}, description={description}]";
+        return $"Room[isLit={isLit}, hasLamp={hasLamp}, hasKey={hasKey}, hasChest={hasChest}, hasExit={hasExit}, isStart={isStart}, hasNorth={hasNorth}, hasSouth={hasSouth}, hasEast={hasEast}, hasWest={hasWest}, description={description}]";
     }
 }
