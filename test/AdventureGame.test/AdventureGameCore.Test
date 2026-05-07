@@ -1,0 +1,137 @@
+using Xunit;
+using System;
+using System.IO;
+
+namespace AdventureGame.Tests;
+
+public class AdventureGameTests
+{
+    [Fact]
+    public void Start_WithQuitInput_ShouldShowWelcomeAndGameOver()
+    {
+        var game = new AdventureGame.AdventureGame();
+
+        using var output = new StringWriter();
+        using var input = new StringReader("Q\n");
+
+        Console.SetOut(output);
+        Console.SetIn(input);
+
+        game.start();
+
+        string result = output.ToString();
+
+        Assert.Contains("Welcome to Adventure Game!", result);
+        Assert.Contains("You quit the game!", result);
+        Assert.Contains("Game Over!", result);
+    }
+
+    [Fact]
+    public void Start_WithInvalidInputThenQuit_ShouldShowInvalidInputMessage()
+    {
+        var game = new AdventureGame.AdventureGame();
+
+        using var output = new StringWriter();
+        using var input = new StringReader("X\nQ\n");
+
+        Console.SetOut(output);
+        Console.SetIn(input);
+
+        game.start();
+
+        string result = output.ToString();
+
+        Assert.Contains("Error: Inavlid Input", result);
+        Assert.Contains("You quit the game!", result);
+    }
+
+    [Fact]
+    public void Start_GetLampThenQuit_ShouldShowGotLampMessage()
+    {
+        var game = new AdventureGame.AdventureGame();
+
+        using var output = new StringWriter();
+        using var input = new StringReader("W\nL\nQ\n");
+
+        Console.SetOut(output);
+        Console.SetIn(input);
+
+        game.start();
+
+        string result = output.ToString();
+
+        Assert.Contains("You got the lamp!", result);
+    }
+
+    [Fact]
+    public void Start_OpenChestWithoutKey_ShouldShowNoKeyMessage()
+    {
+        var game = new AdventureGame.AdventureGame();
+
+        using var output = new StringWriter();
+        using var input = new StringReader("W\nO\nQ\n");
+
+        Console.SetOut(output);
+        Console.SetIn(input);
+
+        game.start();
+
+        string result = output.ToString();
+
+        Assert.Contains("You do not have the key.", result);
+    }
+
+    [Fact]
+    public void Start_MoveIntoDarkRoomWithoutLamp_ShouldShowDarkRoom()
+    {
+        var game = new AdventureGame.AdventureGame();
+
+        using var output = new StringWriter();
+        using var input = new StringReader("D\nQ\n");
+
+        Console.SetOut(output);
+        Console.SetIn(input);
+
+        game.start();
+
+        string result = output.ToString();
+
+        Assert.Contains("This room is pitch black!", result);
+    }
+
+    [Fact]
+    public void Start_InvalidWestMovement_ShouldShowCannotGoWest()
+    {
+        var game = new AdventureGame.AdventureGame();
+
+        using var output = new StringWriter();
+        using var input = new StringReader("A\nQ\n");
+
+        Console.SetOut(output);
+        Console.SetIn(input);
+
+        game.start();
+
+        string result = output.ToString();
+
+        Assert.Contains("You cannot go West!", result);
+    }
+
+    [Fact]
+    public void Start_GetKeyInRoom2_ShouldShowGotKeyMessage()
+    {
+        var game = new AdventureGame.AdventureGame();
+
+        using var output = new StringWriter();
+        using var input = new StringReader("W\nD\nK\nQ\n");
+
+        Console.SetOut(output);
+        Console.SetIn(input);
+
+        game.start();
+
+        string result = output.ToString();
+
+        Assert.Contains("You got the key!", result);
+    }
+}

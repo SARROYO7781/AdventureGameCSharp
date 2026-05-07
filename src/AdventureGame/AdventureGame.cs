@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.SymbolStore;
 using System.Security.Cryptography;
 
 namespace AdventureGame;
@@ -20,6 +21,8 @@ public class AdventureGame
     private int aCol;
     private bool isChestOpen;
     private bool hasPlayerQuit;
+    private bool isAdventurerAlive;
+    private string lastDirection;
 
     public AdventureGame()
     {
@@ -59,7 +62,8 @@ public class AdventureGame
     {
         adventurer = new Adventurer();
 
-         Room r1 = new Room();
+        Room r1 = new Room();
+        r1.SetLit(true);
         r1.SetDescription("Room 1");
         r1.SetSouth(true);
         r1.SetEast(true);
@@ -67,11 +71,13 @@ public class AdventureGame
         r1.SetChest(true);
 
         Room r2 = new Room();
+        r2.SetKey(true);
         r2.SetDescription("Room 2");
         r2.SetWest(true);
         r2.SetSouth(true);
 
         Room r3 = new Room();
+        r3.SetLit(true);
         r3.SetDescription("Room 3");
         r3.SetNorth(true);
         r3.SetEast(true);
@@ -95,6 +101,9 @@ public class AdventureGame
 
         isChestOpen = false;
         hasPlayerQuit = false;
+        isAdventurerAlive = true;
+        
+        lastDirection = string.Empty;
     }
 
     private void ShowGameStartScreen()
@@ -106,13 +115,21 @@ public class AdventureGame
     {
       var r = dungeon[aRow, aCol];
 
-      Console.WriteLine(r.GetDescription());  
+        if (adventurer.HasLamp() || r.IsLit())
+        {
+            Console.WriteLine(r.GetDescription());
+        }
+        
+        else
+        {
+            Console.WriteLine("This room is pitch black!");
+        }
     }
 
     private void ShowInputOptions()
     {
         string options = ""
-        +$"GO NORTH[{GO_NORTH}] | GO EAST[{GO_EAST}] | GET LAMP[{GET_LAMP} | OPEN CHEST[{OPEN_CHEST}]] \n"
+        +$"GO NORTH[{GO_NORTH}] | GO EAST[{GO_EAST}] | GET LAMP[{GET_LAMP}] | OPEN CHEST[{OPEN_CHEST}] \n"
         +$"GO SOUTH[{GO_SOUTH}] | GO WEST[{GO_WEST}] | GET KEY [{GET_KEY}] | QUIT      [{QUIT}] \n"
         +$"> ";
 
@@ -146,7 +163,13 @@ public class AdventureGame
     {
         Room r = dungeon[aRow, aCol];
 
-        if(input == GO_NORTH)
+        if(!adventurer.HasLamp() && !r.IsLit() && input != lastDirection)
+        {
+            Console.WriteLine("You got eaten alive by the grue!");
+            isAdventurerAlive = false;
+        }
+
+        else if(input == GO_NORTH)
         {
             GoNorth(r);
         }
@@ -194,12 +217,12 @@ public class AdventureGame
 
     private bool IsGameOver()
     {
-        return false;
+        return isChestOpen || hasPlayerQuit || !isAdventurerAlive;
     }
 
     private void ShowGameOverScreen()
     {
-        
+        Console.WriteLine("Game Over!");
     }
 
     private void GoNorth(Room r)
@@ -208,6 +231,7 @@ public class AdventureGame
             if (r.HasNorth())
             {
                 aRow -= 1;
+                lastDirection = GO_SOUTH;
             }
 
             else
@@ -220,7 +244,8 @@ public class AdventureGame
     {
          if (r.HasSouth())
             {
-                aRow -= 1;
+                aRow += 1;
+                lastDirection = GO_NORTH;
             }
 
             else
@@ -234,6 +259,7 @@ public class AdventureGame
          if (r.HasEast())
             {
                 aCol += 1;
+                lastDirection = GO_WEST;
             }
 
             else
@@ -247,6 +273,7 @@ public class AdventureGame
          if (r.HasWest())
             {
                 aCol -= 1;
+                lastDirection = GO_EAST;
             }
 
             else
@@ -268,7 +295,7 @@ public class AdventureGame
 
         else
         {
-            Console.WriteLine("There is no lamp in this room>.");
+            Console.WriteLine("There is no lamp in this room.");
         }
     }
 
@@ -297,6 +324,7 @@ public class AdventureGame
             if (adventurer.HasKey())
             {
                  Console.WriteLine("You got the treasure!");
+                 isChestOpen = true;
             }
             else
             {
@@ -311,9 +339,8 @@ public class AdventureGame
 
     private void Quit()
     {
-        
+        Console.WriteLine("You quit the game!");
+        hasPlayerQuit = true;
     }
-
-
 
 }
