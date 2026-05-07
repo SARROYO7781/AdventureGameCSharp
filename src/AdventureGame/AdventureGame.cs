@@ -68,7 +68,6 @@ public class AdventureGame
         r1.SetSouth(true);
         r1.SetEast(true);
         r1.SetLamp(true);
-        r1.SetChest(true);
 
         Room r2 = new Room();
         r2.SetKey(true);
@@ -152,7 +151,7 @@ public class AdventureGame
            input != OPEN_CHEST &&
            input != QUIT)
         {
-            Console.WriteLine("Error: Inavlid Input. Pleae try agaein");
+            Console.WriteLine("Error: Inavlid Input. Pleae try again");
             return false;
         }
 
